@@ -20,7 +20,13 @@
         anche se la osservi a scale diverse.
       </div>
     </div>
-
+    <h1>Benvenuto, <span id="user"></span>!</h1>
+    <button onclick="logout()">Logout</button>
+    
+    <script>
+    document.getElementById("user").textContent = localStorage.getItem("loggedInUser");
+    </script>
+    
     <canvas id="myCanvas"></canvas>
 
   </div>

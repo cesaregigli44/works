@@ -83,3 +83,74 @@ function disegna(profondita) {
 
 disegna(4);
 
+/* ================= REGISTRAZIONE ================= */
+
+const registerForm = document.getElementById("registerForm");
+const registerError = document.getElementById("registerError");
+
+registerForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+
+    // Prendi utenti salvati o crea array vuoto
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Controlla se username già esiste
+    if(users.some(u => u.username === username)) {
+        registerError.textContent = "Username già registrato!";
+        return;
+    }
+
+    // Aggiungi utente
+    users.push({username, password});
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Registrazione completata!");
+    registerForm.reset();
+});
+
+/* ================= LOGIN ================= */
+
+const loginForm = document.getElementById("loginForm");
+const loginError = document.getElementById("loginError");
+
+loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if(user) {
+        // salva sessione
+        localStorage.setItem("loggedInUser", username);
+        window.location.href = "dashboard.html";
+    } else {
+        loginError.textContent = "Username o password errati!";
+    }
+});
+
+/* ================= LOGOUT ================= */
+
+function logout() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+}
+
+/* ================= CONTROLLO SESSIONE ================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const currentPage = window.location.pathname.split("/").pop();
+
+    if(currentPage === "dashboard.html") {
+        const user = localStorage.getItem("loggedInUser");
+        if(!user) {
+            window.location.href = "index.html";
+        }
+    }
+});
